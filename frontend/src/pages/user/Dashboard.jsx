@@ -1,10 +1,11 @@
 // src/pages/user/Dashboard.jsx
 import { useEffect, useState } from "react";
-import API from "../../api/axios";
+import API from "../../api/axios.js";
 import { Trophy, Star, Gift, Calendar, Plus, Loader2, Upload } from 'lucide-react';
 import StatsCard from "../../components/dashboard/StatsCard";
 import PerformanceChart from "../../components/dashboard/PerformanceChart";
 import Modal from "../../components/shared/Modal"; 
+import CharitySlider from "../../components/dashboard/CharitySlider"; // Added Import
 import { toast } from 'react-hot-toast';
 
 export default function Dashboard() {
@@ -89,12 +90,22 @@ export default function Dashboard() {
         <StatsCard title="Draw Status" value={data.stats?.qualified ? "Qualified" : "Pending"} icon={<Calendar />} color={data.stats?.qualified ? "text-green-400" : "text-gray-500"} />
       </div>
 
-      {/* Visual Analytics[cite: 24] */}
-      <div className="bg-[#161B22] p-6 md:p-10 rounded-[40px] border border-white/5 shadow-2xl">
-        <h3 className="text-lg font-black italic uppercase mb-8">Performance Trend</h3>
-        <div className="h-[300px]">
-          <PerformanceChart data={data.stats?.history || []} />
+      {/* Content Grid: Chart & Charity Slider */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* Visual Analytics (Spans 2 columns on large screens) */}
+        <div className="lg:col-span-2 bg-[#161B22] p-6 md:p-10 rounded-[40px] border border-white/5 shadow-2xl">
+          <h3 className="text-lg font-black italic uppercase mb-8">Performance Trend</h3>
+          <div className="h-[300px]">
+            <PerformanceChart data={data.stats?.history || []} />
+          </div>
         </div>
+
+        {/* Charity Contribution Component (Spans 1 column on large screens) */}
+        <div className="lg:col-span-1 flex">
+          <CharitySlider />
+        </div>
+
       </div>
 
       {/* PRD Section 10: Functional Score Submission Modal */}
@@ -145,7 +156,7 @@ export default function Dashboard() {
             )}
           </button>
           <p className="text-[10px] text-center text-gray-500 font-medium uppercase leading-relaxed">
-            Admin verification takes 24-48 hours. Ensure the photo is clear[cite: 29].
+            Admin verification takes 24-48 hours. Ensure the photo is clear.
           </p>
         </form>
       </Modal>

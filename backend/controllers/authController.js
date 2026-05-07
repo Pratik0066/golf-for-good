@@ -55,3 +55,25 @@ export const getMe = async (req, res) => {
   // Sends the full user object (including role and balance) back to the frontend
   res.json(user); 
 };
+
+
+export const updateCharitySettings = async (req, res) => {
+  try {
+    const { selectedCharity, charityPercentage } = req.body;
+
+    // PRD Enforcement: Ensure they can't hack the frontend to go below 10%
+    if (charityPercentage < 10 || charityPercentage > 100) {
+      return res.status(400).json({ msg: "Percentage must be between 10 and 100." });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id, 
+      { selectedCharity, charityPercentage },
+      { new: true }
+    ).select('-password');
+
+    res.json({ msg: "Charity preferences updated!", user });
+  } catch (error) {
+    res.status(500).json({ msg: "Server error updating charity settings." });
+  }
+};
